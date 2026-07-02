@@ -7,20 +7,31 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
       font-family: 'Rajdhani', sans-serif;
       background: #0a0a0f;
       color: #fff;
       overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
     }
-    canvas { display: block; }
+    #canvas-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100vh;
+      z-index: 1;
+    }
+    canvas { display: block; width: 100% !important; height: 100% !important; }
+
+    a, button, .service-item, .contact-btn, .btn-primary, .btn-secondary { touch-action: manipulation; }
 
     /* ---- overlay content ---- */
     .overlay {
-      position: absolute;
+      position: fixed;
       top: 0; left: 0;
-      width: 100%; height: 100%;
+      width: 100%; height: 100vh;
+      display: flex;
+      flex-direction: column;
       pointer-events: none;
       z-index: 10;
     }
@@ -33,16 +44,19 @@
       align-items: center;
       padding: 24px 48px;
       background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, transparent 100%);
+      flex-shrink: 0;
     }
     .logo {
       display: flex;
       align-items: center;
       gap: 16px;
+      min-width: 0;
     }
     .logo img {
       height: 52px;
       width: auto;
       border-radius: 8px;
+      flex-shrink: 0;
     }
     .logo h1 {
       font-family: 'Orbitron', sans-serif;
@@ -54,6 +68,7 @@
       -webkit-text-fill-color: transparent;
       animation: shimmer 3s ease-in-out infinite;
       letter-spacing: 4px;
+      white-space: nowrap;
     }
     @keyframes shimmer {
       0%,100% { background-position: 0% 50%; }
@@ -73,6 +88,7 @@
       transition: 0.3s;
       text-decoration: none;
       letter-spacing: 1px;
+      flex-shrink: 0;
     }
     .contact-btn:hover {
       background: #ffd700;
@@ -82,30 +98,33 @@
 
     /* ---- hero ---- */
     .hero {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      z-index: 11;
-      width: 90%;
+      padding: 40px 20px;
+      width: 100%;
       max-width: 800px;
+      margin: 0 auto;
+      z-index: 11;
     }
     .hero .tagline {
-      font-size: 18px;
-      letter-spacing: 6px;
+      font-size: clamp(11px, 2vw, 18px);
+      letter-spacing: clamp(3px, 0.8vw, 6px);
       text-transform: uppercase;
       color: #ffd700;
       font-weight: 500;
-      margin-bottom: 12px;
+      margin-bottom: clamp(8px, 1.5vh, 12px);
       text-shadow: 0 0 20px rgba(255,215,0,0.3);
     }
     .hero h2 {
       font-family: 'Orbitron', sans-serif;
-      font-size: clamp(36px, 7vw, 72px);
+      font-size: clamp(28px, 7vw, 72px);
       font-weight: 900;
       line-height: 1.1;
-      margin-bottom: 20px;
+      margin-bottom: clamp(12px, 2vh, 20px);
     }
     .hero h2 span {
       background: linear-gradient(135deg, #ffd700, #ffaa00);
@@ -113,10 +132,10 @@
       -webkit-text-fill-color: transparent;
     }
     .hero p {
-      font-size: 18px;
+      font-size: clamp(14px, 1.8vw, 18px);
       color: rgba(255,255,255,0.7);
       max-width: 560px;
-      margin: 0 auto 32px;
+      margin: 0 auto clamp(20px, 3vh, 32px);
       line-height: 1.6;
     }
     .hero-btns {
@@ -128,14 +147,15 @@
     .btn-primary, .btn-secondary {
       font-family: 'Rajdhani', sans-serif;
       font-weight: 700;
-      font-size: 16px;
-      padding: 14px 36px;
+      font-size: clamp(14px, 1.5vw, 16px);
+      padding: clamp(12px, 1.5vh, 14px) clamp(24px, 4vw, 36px);
       border-radius: 50px;
       cursor: pointer;
       transition: 0.3s;
       text-decoration: none;
       letter-spacing: 1px;
       text-transform: uppercase;
+      text-align: center;
     }
     .btn-primary {
       background: linear-gradient(135deg, #ffd700, #ffaa00);
@@ -156,11 +176,13 @@
       color: #ffd700;
     }
 
+    .btn-primary:active, .btn-secondary:active, .contact-btn:active {
+      transform: scale(0.96);
+    }
+
     /* ---- services strip ---- */
     .services-strip {
-      position: absolute;
-      bottom: 0;
-      left: 0;
+      flex-shrink: 0;
       width: 100%;
       z-index: 12;
       padding: 32px 48px;
@@ -186,9 +208,15 @@
       background: rgba(255,215,0,0.05);
       transform: translateY(-4px);
     }
+    .service-item:active {
+      border-color: #ffd700;
+      background: rgba(255,215,0,0.08);
+      transform: scale(0.97);
+    }
     .service-item .icon {
       font-size: 28px;
       margin-bottom: 6px;
+      display: block;
     }
     .service-item .label {
       font-weight: 600;
@@ -204,11 +232,12 @@
 
     /* ---- floating info ---- */
     .float-info {
-      position: absolute;
-      bottom: 140px;
-      right: 48px;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
       z-index: 12;
       text-align: right;
+      pointer-events: auto;
     }
     .float-info a {
       color: #ffd700;
@@ -216,7 +245,7 @@
       font-weight: 600;
       font-size: 14px;
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       transition: 0.3s;
     }
     .float-info a:hover { text-shadow: 0 0 20px rgba(255,215,0,0.5); }
@@ -227,17 +256,51 @@
       letter-spacing: 1px;
     }
 
-    /* ---- responsive ---- */
+    /* ---- responsive: tablet & below ---- */
     @media (max-width: 768px) {
-      header { padding: 16px 20px; flex-wrap: wrap; gap: 12px; }
-      .logo h1 { font-size: 20px; }
-      .logo img { height: 38px; }
-      .services-strip { padding: 20px; }
-      .services-strip .inner { grid-template-columns: repeat(2, 1fr); }
+      header { padding: 14px 16px; gap: 10px; }
+      .logo { gap: 8px; }
+      .logo h1 { font-size: 16px; letter-spacing: 2px; }
+      .logo img { height: 32px; border-radius: 6px; }
+      .services-strip { padding: 20px 16px; }
+      .services-strip .inner { grid-template-columns: repeat(2, 1fr); gap: 10px; }
       .float-info { display: none; }
-      .hero .tagline { font-size: 13px; letter-spacing: 3px; }
-      .hero p { font-size: 15px; }
-      .contact-btn { font-size: 13px; padding: 8px 18px; }
+      .contact-btn { font-size: 12px; padding: 10px 18px; min-height: 44px; display: inline-flex; align-items: center; }
+      .hero { padding: 20px 16px; }
+      .hero-btns { gap: 12px; }
+      .btn-primary, .btn-secondary { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; padding: 12px 22px; }
+      .service-item { padding: 14px 6px; }
+      .service-item .icon { font-size: 24px; margin-bottom: 4px; }
+      .service-item .label { font-size: 13px; }
+      .service-item .sub { font-size: 11px; }
+    }
+
+    /* ---- responsive: phone ---- */
+    @media (max-width: 500px) {
+      header { padding: 10px 12px; gap: 6px; }
+      .logo h1 { font-size: 14px; letter-spacing: 1px; }
+      .logo img { height: 28px; }
+      .contact-btn { font-size: 11px; padding: 8px 14px; min-height: 40px; }
+      .hero-btns { flex-direction: column; align-items: center; }
+      .hero-btns a { width: 100%; max-width: 240px; }
+      .services-strip { padding: 14px 10px; }
+      .services-strip .inner { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .service-item { padding: 10px 4px; }
+      .service-item .icon { font-size: 20px; }
+      .service-item .label { font-size: 12px; }
+      .service-item .sub { font-size: 10px; }
+    }
+
+    /* ---- responsive: small phone ---- */
+    @media (max-width: 380px) {
+      header { flex-direction: column; align-items: center; gap: 8px; }
+      .logo h1 { font-size: 13px; }
+      .hero { padding: 12px 12px; }
+      .services-strip .inner { gap: 6px; }
+      .service-item { padding: 8px 4px; border-radius: 8px; }
+      .service-item .icon { font-size: 18px; }
+      .service-item .label { font-size: 11px; }
+      .service-item .sub { display: none; }
     }
   </style>
 </head>
@@ -265,7 +328,7 @@
         Certified technicians with years of experience.
       </p>
       <div class="hero-btns">
-        <a class="btn-primary" href="tel:+919567475845">Book Repair</a>
+        <a class="btn-primary" href="https://wa.me/919567475845" target="_blank">Book Repair</a>
         <a class="btn-secondary" href="https://maps.app.goo.gl/AcqQNYZ2p6KZqYrSA?g_st=aw" target="_blank">Visit Store</a>
       </div>
     </section>
@@ -313,19 +376,20 @@
   <script>
     (function() {
       const container = document.getElementById('canvas-container');
+      const isMobile = window.innerWidth < 768;
 
       // ---- Scene ----
       const scene = new THREE.Scene();
-      scene.fog = new THREE.FogExp2(0x0a0a0f, 0.018);
+      scene.fog = new THREE.FogExp2(0x0a0a0f, isMobile ? 0.025 : 0.018);
 
       // ---- Camera ----
-      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-      camera.position.set(0, 0, 12);
+      const camera = new THREE.PerspectiveCamera(isMobile ? 50 : 60, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(0, 0, isMobile ? 14 : 12);
 
       // ---- Renderer ----
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.2 : 2));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       container.appendChild(renderer.domElement);
 
@@ -357,13 +421,12 @@
         const bodyGeo = new THREE.BoxGeometry(1.8, 3.6, 0.3);
         const bodyMat = new THREE.MeshStandardMaterial({
           color: color,
-          metalness: 0.7,
+          metalness: isMobile ? 0.5 : 0.7,
           roughness: 0.25,
           emissive: emissive,
-          emissiveIntensity: 0.05,
+          emissiveIntensity: isMobile ? 0.03 : 0.05,
         });
         const body = new THREE.Mesh(bodyGeo, bodyMat);
-        body.castShadow = true;
         group.add(body);
 
         // Screen
@@ -373,36 +436,27 @@
           metalness: 0.3,
           roughness: 0.5,
           emissive: 0x1a3a6a,
-          emissiveIntensity: 0.3,
+          emissiveIntensity: isMobile ? 0.2 : 0.3,
         });
         const screen = new THREE.Mesh(screenGeo, screenMat);
         screen.position.z = 0.18;
         group.add(screen);
 
-        // Screen glow
-        const glowGeo = new THREE.BoxGeometry(1.6, 3.25, 0.02);
-        const glowMat = new THREE.MeshBasicMaterial({
-          color: 0x4488ff,
-          transparent: true,
-          opacity: 0.06,
-        });
-        const glow = new THREE.Mesh(glowGeo, glowMat);
-        glow.position.z = 0.2;
-        group.add(glow);
-
         // Camera bump
-        const bumpGeo = new THREE.CylinderGeometry(0.15, 0.18, 0.08, 16);
-        const bumpMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.9, roughness: 0.2 });
-        const bump = new THREE.Mesh(bumpGeo, bumpMat);
-        bump.position.set(0, 1.6, 0.16);
-        group.add(bump);
+        if (!isMobile) {
+          const bumpGeo = new THREE.CylinderGeometry(0.15, 0.18, 0.08, 12);
+          const bumpMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.9, roughness: 0.2 });
+          const bump = new THREE.Mesh(bumpGeo, bumpMat);
+          bump.position.set(0, 1.6, 0.16);
+          group.add(bump);
 
-        // Side buttons
-        const btnMat = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.8, roughness: 0.3 });
-        for (let i = 0; i < 2; i++) {
-          const btn = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.3, 0.08), btnMat);
-          btn.position.set(0.92, 0.3 + i * 0.5, 0);
-          group.add(btn);
+          // Side buttons
+          const btnMat = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.8, roughness: 0.3 });
+          for (let i = 0; i < 2; i++) {
+            const btn = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.3, 0.08), btnMat);
+            btn.position.set(0.92, 0.3 + i * 0.5, 0);
+            group.add(btn);
+          }
         }
 
         group.position.set(pos.x, pos.y, pos.z);
@@ -421,14 +475,15 @@
       phones.forEach(p => scene.add(p));
 
       // ---- Floating Particles ----
+      const particleCount = isMobile ? 250 : 800;
       const particlesGeo = new THREE.BufferGeometry();
-      const particleCount = 800;
       const positions = new Float32Array(particleCount * 3);
       const sizes = new Float32Array(particleCount);
+      const spread = isMobile ? 25 : 40;
       for (let i = 0; i < particleCount; i++) {
-        positions[i * 3] = (Math.random() - 0.5) * 40;
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 25;
-        positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+        positions[i * 3] = (Math.random() - 0.5) * spread;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * (isMobile ? 16 : 25);
+        positions[i * 3 + 2] = (Math.random() - 0.5) * (isMobile ? 12 : 20);
         sizes[i] = Math.random() * 2 + 0.5;
       }
       particlesGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -436,9 +491,9 @@
 
       const particleMat = new THREE.PointsMaterial({
         color: 0xffd700,
-        size: 0.06,
+        size: isMobile ? 0.05 : 0.06,
         transparent: true,
-        opacity: 0.4,
+        opacity: isMobile ? 0.25 : 0.4,
         blending: THREE.AdditiveBlending,
         sizeAttenuation: true,
       });
@@ -446,40 +501,55 @@
       scene.add(particles);
 
       // ---- Gold Rings (decorative) ----
-      function createRing(radius, y, z, opacity) {
-        const geo = new THREE.TorusGeometry(radius, 0.02, 16, 60);
-        const mat = new THREE.MeshBasicMaterial({
-          color: 0xffd700,
-          transparent: true,
-          opacity: opacity,
-          blending: THREE.AdditiveBlending,
-        });
-        const mesh = new THREE.Mesh(geo, mat);
-        mesh.position.y = y;
-        mesh.position.z = z;
-        mesh.rotation.x = Math.PI / 2.5;
-        mesh.rotation.z = 0.3;
-        return mesh;
+      let rings;
+      if (!isMobile) {
+        function createRing(radius, y, z, opacity) {
+          const geo = new THREE.TorusGeometry(radius, 0.02, 12, 40);
+          const mat = new THREE.MeshBasicMaterial({
+            color: 0xffd700,
+            transparent: true,
+            opacity: opacity,
+            blending: THREE.AdditiveBlending,
+          });
+          const mesh = new THREE.Mesh(geo, mat);
+          mesh.position.y = y;
+          mesh.position.z = z;
+          mesh.rotation.x = Math.PI / 2.5;
+          mesh.rotation.z = 0.3;
+          return mesh;
+        }
+
+        rings = [
+          createRing(3.8, -0.5, -5, 0.15),
+          createRing(5.2, 1.2, -7, 0.08),
+          createRing(2.4, -1.8, -3, 0.12),
+        ];
+        rings.forEach(r => scene.add(r));
       }
 
-      const rings = [
-        createRing(3.8, -0.5, -5, 0.15),
-        createRing(5.2, 1.2, -7, 0.08),
-        createRing(2.4, -1.8, -3, 0.12),
-      ];
-      rings.forEach(r => scene.add(r));
-
-      // ---- Mouse movement ----
+      // ---- Mouse / Touch movement ----
       let mouseX = 0, mouseY = 0;
+      let touchActive = false;
       document.addEventListener('mousemove', (e) => {
+        if (touchActive) return;
         mouseX = (e.clientX / window.innerWidth) * 2 - 1;
         mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
       });
+      let touchThrottle;
       document.addEventListener('touchmove', (e) => {
+        if (touchThrottle) return;
+        touchThrottle = setTimeout(() => { touchThrottle = null; }, 32);
+        touchActive = true;
         if (e.touches.length > 0) {
           mouseX = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
           mouseY = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
         }
+      });
+      document.addEventListener('touchend', () => {
+        touchActive = false;
+        // Smoothly return camera to center
+        mouseX = 0;
+        mouseY = 0;
       });
 
       // ---- Resize ----
@@ -491,17 +561,19 @@
 
       // ---- Animation ----
       const clock = new THREE.Clock();
+      const ringAnim = !isMobile;
 
       function animate() {
         requestAnimationFrame(animate);
         const t = clock.getElapsedTime();
 
         // Rotate each phone
+        const phoneSpeed = isMobile ? 0.001 : 0.002;
         phones.forEach((p, i) => {
-          p.rotation.y += 0.002;
-          p.position.y += Math.sin(t * 0.5 + i * 1.2) * 0.002;
-          p.rotation.x = Math.sin(t * 0.3 + i * 0.8) * 0.02;
-          p.rotation.z = Math.cos(t * 0.2 + i * 0.5) * 0.02;
+          p.rotation.y += phoneSpeed;
+          p.position.y += Math.sin(t * 0.5 + i * 1.2) * (isMobile ? 0.001 : 0.002);
+          p.rotation.x = Math.sin(t * 0.3 + i * 0.8) * (isMobile ? 0.01 : 0.02);
+          p.rotation.z = Math.cos(t * 0.2 + i * 0.5) * (isMobile ? 0.01 : 0.02);
         });
 
         // Particles
@@ -509,14 +581,17 @@
         particles.rotation.x += 0.0001;
 
         // Rings
-        rings.forEach((r, i) => {
-          r.rotation.z += 0.001 * (i + 1);
-          r.rotation.x += 0.0005;
-        });
+        if (ringAnim) {
+          rings.forEach((r, i) => {
+            r.rotation.z += 0.001 * (i + 1);
+            r.rotation.x += 0.0005;
+          });
+        }
 
-        // Camera follow mouse
-        camera.position.x += (mouseX * 1.2 - camera.position.x) * 0.02;
-        camera.position.y += (mouseY * 0.8 - camera.position.y) * 0.02;
+        // Camera follow mouse - dampened on mobile
+        const followSpeed = isMobile ? 0.01 : 0.02;
+        camera.position.x += (mouseX * 1.2 - camera.position.x) * followSpeed;
+        camera.position.y += (mouseY * 0.8 - camera.position.y) * followSpeed;
         camera.lookAt(0, 0, 0);
 
         renderer.render(scene, camera);
