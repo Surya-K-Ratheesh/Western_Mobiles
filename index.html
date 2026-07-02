@@ -34,8 +34,15 @@
       flex-direction: column;
       pointer-events: none;
       z-index: 10;
+      overflow-y: auto;
     }
     .overlay > * { pointer-events: auto; }
+    .overlay-scroll {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
 
     /* ---- header ---- */
     header {
@@ -98,7 +105,7 @@
 
     /* ---- hero ---- */
     .hero {
-      flex: 1;
+      flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -109,6 +116,7 @@
       max-width: 800px;
       margin: 0 auto;
       z-index: 11;
+      min-height: 0;
     }
     .hero .tagline {
       font-size: clamp(11px, 2vw, 18px);
@@ -185,23 +193,27 @@
       flex-shrink: 0;
       width: 100%;
       z-index: 12;
-      padding: 32px 48px;
-      background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+      padding: 24px 32px;
+      background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, transparent 100%);
     }
     .services-strip .inner {
       max-width: 1200px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
     }
     .service-item {
       text-align: center;
-      padding: 16px 8px;
+      padding: 12px 8px;
       border: 1px solid rgba(255,215,0,0.15);
-      border-radius: 12px;
+      border-radius: 10px;
       transition: 0.3s;
       cursor: default;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     .service-item:hover {
       border-color: #ffd700;
@@ -214,20 +226,23 @@
       transform: scale(0.97);
     }
     .service-item .icon {
-      font-size: 28px;
-      margin-bottom: 6px;
+      font-size: 24px;
+      margin-bottom: 4px;
       display: block;
+      line-height: 1;
     }
     .service-item .label {
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
       color: rgba(255,255,255,0.85);
       letter-spacing: 0.5px;
+      line-height: 1.2;
     }
     .service-item .sub {
-      font-size: 12px;
+      font-size: 11px;
       color: rgba(255,255,255,0.4);
       margin-top: 2px;
+      line-height: 1.2;
     }
 
     /* ---- floating info ---- */
@@ -258,48 +273,55 @@
 
     /* ---- responsive: tablet & below ---- */
     @media (max-width: 768px) {
-      header { padding: 14px 16px; gap: 10px; }
+      header { padding: 12px 16px; gap: 8px; }
       .logo { gap: 8px; }
-      .logo h1 { font-size: 16px; letter-spacing: 2px; }
-      .logo img { height: 32px; border-radius: 6px; }
-      .services-strip { padding: 20px 16px; }
-      .services-strip .inner { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-      .float-info { display: none; }
-      .contact-btn { font-size: 12px; padding: 10px 18px; min-height: 44px; display: inline-flex; align-items: center; }
-      .hero { padding: 20px 16px; }
-      .hero-btns { gap: 12px; }
-      .btn-primary, .btn-secondary { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; padding: 12px 22px; }
-      .service-item { padding: 14px 6px; }
-      .service-item .icon { font-size: 24px; margin-bottom: 4px; }
-      .service-item .label { font-size: 13px; }
-      .service-item .sub { font-size: 11px; }
-    }
-
-    /* ---- responsive: phone ---- */
-    @media (max-width: 500px) {
-      header { padding: 10px 12px; gap: 6px; }
-      .logo h1 { font-size: 14px; letter-spacing: 1px; }
-      .logo img { height: 28px; }
-      .contact-btn { font-size: 11px; padding: 8px 14px; min-height: 40px; }
-      .hero-btns { flex-direction: column; align-items: center; }
-      .hero-btns a { width: 100%; max-width: 240px; }
-      .services-strip { padding: 14px 10px; }
+      .logo h1 { font-size: 14px; letter-spacing: 2px; }
+      .logo img { height: 28px; border-radius: 6px; }
+      .services-strip { padding: 12px 12px; }
       .services-strip .inner { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-      .service-item { padding: 10px 4px; }
-      .service-item .icon { font-size: 20px; }
+      .float-info { display: none; }
+      .contact-btn { font-size: 12px; padding: 8px 16px; min-height: 40px; display: inline-flex; align-items: center; }
+      .hero { padding: 16px 16px; }
+      .hero-btns { gap: 10px; }
+      .btn-primary, .btn-secondary { min-height: 40px; font-size: 13px; padding: 10px 20px; display: inline-flex; align-items: center; justify-content: center; }
+      .service-item { padding: 10px 6px; border-radius: 8px; }
+      .service-item .icon { font-size: 20px; margin-bottom: 3px; }
       .service-item .label { font-size: 12px; }
       .service-item .sub { font-size: 10px; }
     }
 
-    /* ---- responsive: small phone ---- */
-    @media (max-width: 380px) {
-      header { flex-direction: column; align-items: center; gap: 8px; }
-      .logo h1 { font-size: 13px; }
+    /* ---- responsive: phone ---- */
+    @media (max-width: 500px) {
+      header { padding: 8px 10px; gap: 6px; }
+      .logo h1 { font-size: 12px; letter-spacing: 1px; }
+      .logo img { height: 24px; }
+      .contact-btn { font-size: 10px; padding: 6px 12px; min-height: 36px; }
       .hero { padding: 12px 12px; }
+      .hero-btns { flex-direction: column; align-items: center; gap: 8px; }
+      .hero-btns a { width: 100%; max-width: 220px; }
+      .btn-primary, .btn-secondary { min-height: 38px; font-size: 12px; padding: 8px 16px; }
+      .services-strip { padding: 10px 8px; }
       .services-strip .inner { gap: 6px; }
-      .service-item { padding: 8px 4px; border-radius: 8px; }
+      .service-item { padding: 8px 4px; }
       .service-item .icon { font-size: 18px; }
       .service-item .label { font-size: 11px; }
+      .service-item .sub { font-size: 9px; }
+    }
+
+    /* ---- responsive: small phone ---- */
+    @media (max-width: 380px) {
+      header { flex-direction: column; align-items: center; gap: 6px; }
+      .logo h1 { font-size: 11px; }
+      .logo img { height: 22px; }
+      .hero { padding: 8px 8px; }
+      .hero h2 { font-size: clamp(22px, 8vw, 28px); }
+      .hero .tagline { margin-bottom: 4px; }
+      .hero p { margin-bottom: 12px; }
+      .services-strip { padding: 8px 6px; }
+      .services-strip .inner { gap: 4px; }
+      .service-item { padding: 6px 3px; border-radius: 6px; border-width: 1px; }
+      .service-item .icon { font-size: 16px; margin-bottom: 2px; }
+      .service-item .label { font-size: 10px; }
       .service-item .sub { display: none; }
     }
   </style>
@@ -311,55 +333,57 @@
 
   <!-- ====== Header ====== -->
   <div class="overlay">
-    <header>
-      <div class="logo">
-        <img src="Logo.jpeg" alt="Western Logo" />
-        <h1>WESTERN</h1>
-      </div>
-      <a class="contact-btn" href="tel:+919567475845">Call Now</a>
-    </header>
+    <div class="overlay-scroll">
+      <header>
+        <div class="logo">
+          <img src="logo.jpeg" alt="Western Logo" />
+          <h1>WESTERN</h1>
+        </div>
+        <a class="contact-btn" href="tel:+919567475845">Call Now</a>
+      </header>
 
-    <!-- ====== Hero ====== -->
-    <section class="hero">
-      <div class="tagline">Premium Phone &amp; Accessory Store</div>
-      <h2>Your <span>Tech</span><br/>Destination</h2>
-      <p>
-        Expert mobile repairs, premium watches, clocks, and electronic accessories.
-        Certified technicians with years of experience.
-      </p>
-      <div class="hero-btns">
-        <a class="btn-primary" href="https://wa.me/919567475845" target="_blank">Book Repair</a>
-        <a class="btn-secondary" href="https://maps.app.goo.gl/AcqQNYZ2p6KZqYrSA?g_st=aw" target="_blank">Visit Store</a>
-      </div>
-    </section>
+      <!-- ====== Hero ====== -->
+      <section class="hero">
+        <div class="tagline">Premium Phone &amp; Accessory Store</div>
+        <h2>Your <span>Tech</span><br/>Destination</h2>
+        <p>
+          Expert mobile repairs, premium watches, clocks, and electronic accessories.
+          Certified technicians with years of experience.
+        </p>
+        <div class="hero-btns">
+          <a class="btn-primary" href="https://wa.me/919567475845" target="_blank">Book Repair</a>
+          <a class="btn-secondary" href="https://maps.app.goo.gl/AcqQNYZ2p6KZqYrSA?g_st=aw" target="_blank">Visit Store</a>
+        </div>
+      </section>
 
-    <!-- ====== Services ====== -->
-    <div class="services-strip">
-      <div class="inner">
-        <div class="service-item">
-          <div class="icon">📱</div>
-          <div class="label">Phone Repair</div>
-          <div class="sub">Certified Technician</div>
-        </div>
-        <div class="service-item">
-          <div class="icon">⌚</div>
-          <div class="label">Watches</div>
-          <div class="sub">Premium Collection</div>
-        </div>
-        <div class="service-item">
-          <div class="icon">🕰️</div>
-          <div class="label">Clocks</div>
-          <div class="sub">Classic &amp; Modern</div>
-        </div>
-        <div class="service-item">
-          <div class="icon">🔌</div>
-          <div class="label">Accessories</div>
-          <div class="sub">Electronic Gear</div>
-        </div>
-        <div class="service-item">
-          <div class="icon">🛠️</div>
-          <div class="label">Expert Service</div>
-          <div class="sub">Highly Qualified</div>
+      <!-- ====== Services ====== -->
+      <div class="services-strip">
+        <div class="inner">
+          <div class="service-item">
+            <div class="icon">📱</div>
+            <div class="label">Phone Repair</div>
+            <div class="sub">Certified Technician</div>
+          </div>
+          <div class="service-item">
+            <div class="icon">⌚</div>
+            <div class="label">Watches</div>
+            <div class="sub">Premium Collection</div>
+          </div>
+          <div class="service-item">
+            <div class="icon">🕰️</div>
+            <div class="label">Clocks</div>
+            <div class="sub">Classic &amp; Modern</div>
+          </div>
+          <div class="service-item">
+            <div class="icon">🔌</div>
+            <div class="label">Accessories</div>
+            <div class="sub">Electronic Gear</div>
+          </div>
+          <div class="service-item">
+            <div class="icon">🛠️</div>
+            <div class="label">Expert Service</div>
+            <div class="sub">Highly Qualified</div>
+          </div>
         </div>
       </div>
     </div>
